@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this code or these fixed panels, please cite the manuscript and this archive."
+title: "A formula-portable, externally validated immediate-early-gene score for agonal state"
+abstract: >-
+  Fixed gene panels, frozen criteria and analysis code for a portable agonal-state score for
+  post-mortem brain transcriptomics, validated against the Hardy death-circumstances scale
+  across thirteen GTEx brain regions.
+authors:
+  - family-names: "Yan"
+    given-names: "Caifeng"
+  - family-names: "Zhang"
+    given-names: "Bingyin"
+  - family-names: "Wang"
+    given-names: "Dong"
+  - family-names: "Chang"
+    given-names: "Hong"
+  - family-names: "Zhang"
+    given-names: "Guang-Ming"
+  - family-names: "Chen"
+    given-names: "Quansheng"
+    email: "qschen@camc.edu.cn"
+license: MIT
+type: software

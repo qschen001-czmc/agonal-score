@@ -1,0 +1,4 @@
+b1e64819270555cf151282a5feb43309  criteria_freeze.yaml
+
+The MD5 above must equal the 'source_md5' field in criteria_thresholds.json.
+verify with:  python -c "import json,hashlib;d=json.load(open('criteria/criteria_thresholds.json'));print(d['source_md5']=='b1e64819270555cf151282a5feb43309')"

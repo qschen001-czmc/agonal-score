@@ -1,0 +1,8 @@
+# Core agonal score panel (n=6). One gene symbol per line.
+# Fixed before any GTEx association analysis; see criteria/criteria_freeze.yaml.
+FOS
+FOSB
+EGR1
+JUN
+JUNB
+JUND

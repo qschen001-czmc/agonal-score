@@ -1,0 +1,20 @@
+# Extended agonal score panel (n=18): core set plus 12 stress-response genes.
+# Fixed before any GTEx association analysis; see criteria/criteria_freeze.yaml.
+FOS
+FOSB
+EGR1
+EGR2
+EGR3
+EGR4
+JUN
+JUNB
+JUND
+ATF3
+IER2
+DUSP1
+ZFP36
+HSPA1A
+HSPA1B
+HSPB1
+HSPH1
+DNAJB1

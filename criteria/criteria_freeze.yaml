@@ -1,0 +1,80 @@
+version: "1.0"
+owner: 项目组
+freeze_date: null
+note: >
+  本项目所有分析阈值集中在此文件。修改此文件后必须重新运行 freeze_criteria.py，
+  镜像 JSON 是各脚本唯一读取来源；代码里不得再写一份阈值。
+
+# ---------------- 数据来源 ----------------
+data:
+  gtex:
+    version: v8
+    tissue: "Brain - Frontal Cortex (BA9)"   # 与 MDD dlPFC 研究同一脑区
+    replication_tissue: "Brain - Cortex"
+    # 脑区调查：把"脑区特异"从局限变成结果
+    region_survey:
+      - "Brain - Frontal Cortex (BA9)"
+      - "Brain - Cortex"
+      - "Brain - Anterior cingulate cortex (BA24)"
+      - "Brain - Hippocampus"
+      - "Brain - Amygdala"
+      - "Brain - Hypothalamus"
+      - "Brain - Caudate (basal ganglia)"
+      - "Brain - Putamen (basal ganglia)"
+      - "Brain - Nucleus accumbens (basal ganglia)"
+      - "Brain - Substantia nigra"
+      - "Brain - Cerebellum"
+      - "Brain - Cerebellar Hemisphere"
+      - "Brain - Spinal cord (cervical c-1)"
+    region_min_n: 30
+    # GTEx v8 公开的 Google Cloud Storage 桶（无需登录）
+    base_url: "https://storage.googleapis.com/adult-gtex"
+    files:
+      subject_phenotypes: "annotations/v8/metadata-files/GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt"
+      sample_attributes: "annotations/v8/metadata-files/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt"
+      gene_tpm: "bulk-gex/v8/rna-seq/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_tpm.gct.gz"
+  sibling_project:
+    root: "F:/Sxnxm/mdd-tcm-screen"
+    note: "免疫组化/单细胞伪批量与协变量从这里读，不重复下载"
+
+# ---------------- IEG 指标定义 ----------------
+ieg:
+  panel:
+    [FOS, FOSB, EGR1, EGR2, EGR3, EGR4, JUN, JUNB, JUND,
+     ATF3, IER2, DUSP1, ZFP36, HSPA1A, HSPA1B, HSPB1, HSPH1, DNAJB1]
+  core_panel: [FOS, FOSB, EGR1, JUN, JUNB, JUND]
+  transform: "log2(TPM + 1)"
+  score: "面板基因的平均值"
+  min_genes_present: 12
+
+# ---------------- 验证设计（预研一的主判据） ----------------
+validation:
+  outcome: DTHHRDY          # Hardy 死亡过程量表，0=呼吸机 1=快 2=中间 3=慢 4=慢(对照)
+  order: [0, 1, 2, 3, 4]        # GTEx 编码：0=呼吸机 1=快 2=中间 3=慢 4=慢伴终末期
+  # 方向不预设。我们只预设"单调关联"，符号由数据给出，并据此解释 MDD 队列的方向。
+  # 理由：文献对 IEG 与濒死期的方向并不一致（急性缺氧可诱导，长时间濒死可耗竭），
+  # 预设符号会让验证变成凑结论。
+  direction: to_be_estimated
+  primary_test:
+    method: "Kruskal-Wallis + Jonckheere-Terpstra 趋势检验"
+    alpha: 0.05
+  covariates: [RIN, ischemic_time, age, sex]
+  pass_rule: >
+    在纳入全部协变量的线性模型中，DTHHRDY 对 IEG 评分的效应
+    方向与预期一致且 p < 0.05；单独模型（不加协变量）同样显著。
+  fail_rule: >
+    若校正 RIN 与缺血时间后 DTHHRDY 效应消失，则 IEG 评分只能算
+    "组织质量复合指标"，不得表述为濒死状态特异代理。
+  sensitivity:
+    - "仅用 core_panel 六个基因"
+    - "排除 DTHHRDY 缺失或 RIN 缺失的样本"
+    - "按脑区拆分（Cortex / 其他脑区）"
+
+# ---------------- 报告要求 ----------------
+reporting:
+  must_report:
+    - "各 DTHHRDY 分组的样本数与 IEG 评分中位数"
+    - "校正前后 DTHHRDY 效应量与 p 值"
+    - "RIN、缺血时间与 IEG 的相关性"
+    - "IEG 评分与 RIN 的共线性（VIF）"
+    - "敏感性分析的完整结果"
