@@ -1,0 +1,14 @@
+# Primary data are public and large; do not commit them.
+# NOTE: data/derived/ IS committed on purpose — it lets the pipeline run without
+# downloading the 1.6 GB GTEx matrix. Only raw inputs are excluded.
+data/raw/
+*.gct.gz
+raw/
+
+# Generated outputs that are large or intermediate
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+.DS_Store
+Thumbs.db
